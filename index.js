@@ -14,6 +14,7 @@ const app = express();
 const port = process.env.PORT || 8000;
 
 // for testing
+// hi
 app.get("/", (req, res) => {
     res.send("api is running")
 })
@@ -41,6 +42,7 @@ app.use("/api/tours",tourRoute);
 app.use("/api/user",userRoute);
 app.use("/api/auth",authRoute);
 app.use("/api/booking",bookingRoute);
+
 
 app.listen(port, () => {
     connect();
