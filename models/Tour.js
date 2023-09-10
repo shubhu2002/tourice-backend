@@ -15,7 +15,6 @@ const tourSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-
     price: {
       type: Number,
       required: true,
@@ -28,6 +27,10 @@ const tourSchema = new mongoose.Schema(
       type: Boolean,
       required: true,
     },
+    topPlaces: {
+      type: Array,
+      required: true
+    }
   },
   { timestamps: true }
 );

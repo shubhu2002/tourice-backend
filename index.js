@@ -11,7 +11,11 @@ import bookingRoute from "./routes/bookings.js"
 
 dotenv.config();
 const app = express();
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 4000;
+const corsOption = {
+    origin: true,
+    Credentials: true
+}
 
 // for testing
 // hi
@@ -19,15 +23,15 @@ app.get("/", (req, res) => {
     res.send("api is running")
 })
 // database connection 
-const connect = async()=>{
+const connect = async () => {
     try {
-            await mongoose.connect(process.env.MONGO_URI,{
-                useNewUrlParser:true,
-                useUnifiedTopology:true
+        await mongoose.connect(process.env.MONGO_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
 
-            })
-            console.log("MongoDB connected")
-        
+        })
+        console.log("MongoDB connected")
+
     } catch (error) {
         console.log("MongoDB connection Fails")
     }
@@ -35,13 +39,13 @@ const connect = async()=>{
 
 // middlewares
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOption));
 app.use(cookieParser());
 
-app.use("/api/tours",tourRoute);
-app.use("/api/user",userRoute);
-app.use("/api/auth",authRoute);
-app.use("/api/booking",bookingRoute);
+app.use("/api/tours", tourRoute);
+app.use("/api/user", userRoute);
+app.use("/api/auth", authRoute);
+app.use("/api/booking", bookingRoute);
 
 
 app.listen(port, () => {

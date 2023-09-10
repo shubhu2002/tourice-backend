@@ -1,6 +1,9 @@
 import User from "../models/User.js"
 import bcrypt from "bcryptjs"
-// register
+import jwt from "jsonwebtoken";
+
+
+// registeration
 export const register = async (req, res) => {
     try {
 
@@ -31,7 +34,7 @@ export const register = async (req, res) => {
 // // login
 export const login = async (req, res) => {
     const email = req.body.email;
-    const password = req.body.password;
+    const pass = req.body.password;
 
     try {
         const user = await User.findOne({ email });
@@ -43,7 +46,7 @@ export const login = async (req, res) => {
             })
         }
 
-        const checkPassword = bcrypt.compare(password,user.password);
+        const checkPassword = await bcrypt.compare(pass, user.password);
 
         if (!checkPassword) {
             return res.status(401).json({
@@ -52,10 +55,21 @@ export const login = async (req, res) => {
             })
         }
 
+        const { password, role, ...rest } = user._doc;
+
+        // create jwt token
+        const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET_KEY, { expiresIn: "15d" })
+
+        // set token in browser cookies and send response to client
+        res.cookie('accessToken',token,{
+            httpOnly:true,
+            expires:token.expiresIn
+        }).status(200).json({token,data:{...rest},role})
+
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: "Failed To Create"
+            message: "Failed To login"
         })
     }
 };
